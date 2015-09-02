@@ -1,0 +1,8 @@
+development:
+  adapter: postgresql
+  database: jtpassbook_development
+  host: localhost
+
+production:
+  adapter: postgresql
+  encoding: unicode
