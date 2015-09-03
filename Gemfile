@@ -6,3 +6,7 @@ gem 'sinatra'
 
 gem 'activerecord'
 gem 'sinatra-activerecord'
+
+group :development do
+  gem 'pry'
+end
