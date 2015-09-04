@@ -9,6 +9,8 @@ require './config/environments'
 require './models/user'
 require './models/snippet'
 
+require 'pry'
+
 # The entry point for slash commands
 get '/gateway' do
   message = ""
@@ -21,8 +23,26 @@ get '/gateway' do
   command = extract_content params[:text]
   unless command[:success]
     message += command[:message]
-  else
-    message += "#{command[:action]} - #{command[:content]}"
+    return message
+  end
+
+  case command[:action]
+    when :new
+      @snippet = @user.snippets.new
+      @snippet.title = command[:content][0]
+      @snippet.snippet = command[:content][1]
+      if @snippet.save
+        message += "Snippet saved successfully. You can access it by `/snippet get #{@snippet.title}. \n"
+      else
+        message += "There was some error saving the snippet. Please try again."
+      end
+    when :get
+      @snippet = @user.snippets.find_by(title: command[:content][0])
+      unless @snippet
+        message += "Unable to find the snippet #{command[:content][0]}. Check if spelling is correct. You can search for snippets instead by `/snippet search YOUR_QUERY`"
+      else
+        message += @snippet.snippet
+      end
   end
   message
 end
