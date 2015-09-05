@@ -27,21 +27,27 @@ get '/gateway' do
   end
 
   case command[:action]
+    title = command[:content][0]
+    snippet = command[:content][1]
     when :new
       @snippet = @user.snippets.new
-      @snippet.title = command[:content][0]
-      @snippet.snippet = command[:content][1]
-      if @snippet.save
-        message += "Snippet saved successfully. You can access it by `/snippet get #{@snippet.title}. \n"
-      else
-        message += "There was some error saving the snippet. Please try again."
-      end
+      @snippet.title = title
+      @snippet.snippet = snippet
+      message += save_snippet
     when :get
-      @snippet = @user.snippets.find_by(title: command[:content][0])
+      @snippet = @user.snippets.find_by(title: title)
       unless @snippet
-        message += "Unable to find the snippet #{command[:content][0]}. Check if spelling is correct. You can search for snippets instead by `/snippet search YOUR_QUERY`"
+        message += not_found_msg title
       else
         message += @snippet.snippet
+      end
+    when :edit
+      @snipeet = @user.snippets.find_by(title: title)
+      unless @snippet
+        message += not_found_msg title
+      else
+        @snippet.snippet = snippet
+        message += save_snippet
       end
   end
   message
@@ -61,5 +67,17 @@ def extract_content text
     return {success: false, message: "Invalid Format. Valid format are \n `new title`, \n `get title`, \n `search query`, \n `update title content`, \n `delete title`"}
   else
     return {success: true, action: action, content: command[1..-1]}
+  end
+end
+
+def not_found_msg title
+  "Unable to find the snippet #{title}. Check if spelling is correct. You can search for snippets instead by `/snippet search YOUR_QUERY`"
+end
+
+def save_snippet
+  if @snippet.save
+    return "Snippet saved successfully. You can access it by `/snippet get #{@snippet.title}. \n"
+  else
+    return "There was some error saving the snippet. Please try again."
   end
 end
