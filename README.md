@@ -56,3 +56,11 @@ There are 5 commands available in total as of now. Their formats are,
                 1. heroku_pg_backup
                 2. heroku db_migrate
             ```
+
+
+### To Run it locally :-
+1. Clone the repo `git clone https://github.com/avinoth/slack-snippet.git`
+2. cd into slack-snippet.
+3. run `bundle install`.
+4. run `rake db:create && rake db:migrate`
+5. run the app `ruby ./app.rb`
