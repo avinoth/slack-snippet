@@ -2,3 +2,6 @@ development:
   adapter: postgresql
   database: slacksnippet_development
   host: localhost
+
+production:
+  adapter: postgresql
