@@ -9,8 +9,6 @@ require './config/environments'
 require './models/user'
 require './models/snippet'
 
-require 'pry'
-
 # The entry point for slash commands
 get '/gateway' do
   message = ""
