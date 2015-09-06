@@ -13,9 +13,12 @@ require './models/snippet'
 get '/gateway' do
   message = ""
   @user = User.find_by(slack_user_id: params[:user_id])
-  unless @user
+  if @user and @user.token != params[:token]
+    message += "Unauthorized Request."
+    return message
+  elsif !@user
     @user = User.create(name: params[:user_name], slack_user_id: params[:user_id], token: params[:token])
-    message = "Welcome #{@user.name} to snippy :tada: \n"
+    message += "Welcome #{@user.name} to snippy :tada: \n"
   end
 
   command = extract_content params[:text]
