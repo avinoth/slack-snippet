@@ -62,9 +62,9 @@ get '/gateway' do
       end
     when '-s'
       query = title
-      results = @user.snippets.where("title ILIKE ?", "%#{query}%")
+      results = @user.snippets.where("title ILIKE ? OR snippet ILIKE ?", "%#{query}%", "%#{query}%")
       if results
-        message += "Your Search results:- \n " + results.map.with_index {|s, i| "#{i+1}. #{s.title}"}.join("\n")
+        message += "Your Search results:- \n " + results.map.with_index {|s, i| "#{i+1}. #{s.title} - #{truncate(s.snippet, 30)}"}.join("\n")
       else
         message += "Your Search query didn't yield any results. Try again with different keywords."
       end
@@ -99,4 +99,8 @@ def save_snippet
   else
     return "There was some error saving the snippet. Please try again."
   end
+end
+
+def truncate(content, max=10)
+  content.length > max ? "#{content[0...max]}..." : content
 end
