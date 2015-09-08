@@ -23,34 +23,34 @@ A slack slash command bot to save snippets/content quickly from slack.
 There are 5 commands available in total as of now. Their formats are,
 
 ##### new:-
-    To create a new snippet. The syntax is `new-title-content`. Recommend avoiding '-' in title.
+    To create a new snippet. The syntax is `-n title -c content`.
     eg: 
-      cmd - /snippet new-heroku_pg_newBackup-heroku pg:backups --capture -a APP_NAME
-      resp - Snippet saved successfully. You can access it by `/snippet get-heroku_pg_newBackup`.
+      cmd - /snippet -n heroku_pg_newBackup -c heroku pg:backups --capture -a APP_NAME
+      resp - Snippet saved successfully. You can access it by `/snippet -g heroku_pg_newBackup`.
 
 ##### get:-
-    To get a existing snippet. They syntax is `get-title`.
+    To get a existing snippet. They syntax is `-g title`.
     eg:
-      cmd - /snippet get-heroku_pg_newBackup
+      cmd - /snippet -g heroku_pg_newBackup
       resp - heroku pg:backups --capture -a APP_NAME
       
 ##### edit:-
-    To edit a existing snippet. The syntax is `edit-title-newContent`. Recommend avoiding '-' in title.
+    To edit a existing snippet. The syntax is `-e title -c newContent`. The title wouldn't be editable for now.
     eg: 
-      cmd - /snippet edit-heroku_pg_newBackup-heroku pg:backups --capture
-      resp - Snippet saved successfully. You can access it by `/snippet get-heroku_pg_newBackup`.
+      cmd - /snippet -e heroku_pg_newBackup -c heroku pg:backups --capture
+      resp - Snippet saved successfully. You can access it by `/snippet -g heroku_pg_newBackup`.
 
 ##### delete:-
-    To destroy a existing snippet. The action is irreversible. The syntax is `delete-title`.
+    To destroy a existing snippet. The action is irreversible. The syntax is `-d title`.
     eg:
-      cmd - /snippet delete-heroku_pg_newBackup
+      cmd - /snippet -d heroku_pg_newBackup
       resp - Snippet is successfully destroyed. It is un-recoverable.
 
 ##### search:-
     To search for your snippets.
-    syntax :- `search-query`
+    syntax :- `-s query`
     eg:
-      cmd - /snippet search-heroku
+      cmd - /snippet -s heroku
       resp - ```
               Your Search results:-
                 1. heroku_pg_backup
