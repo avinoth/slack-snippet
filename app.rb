@@ -26,12 +26,17 @@ get '/gateway' do
     message += command[:message]
     return message
   end
-  title = command[:content][0].strip
+  title = command[:content][0].strip.downcase
   snippet = command[:content][1]
   case command[:action]
     when '-n'
-      @snippet = @user.snippets.new({title: title, snippet: snippet.strip})
-      message += save_snippet
+      @snippet = @user.snippets.find_by(title: title)
+      if @snippet
+        message += "Snippet already with the name #{title} exists. If you want to edit it try -e flag."
+      else
+        @snippet = @user.snippets.new({title: title, snippet: snippet.strip})
+        message += save_snippet
+      end
     when '-g'
       @snippet = @user.snippets.find_by(title: title)
       unless @snippet
