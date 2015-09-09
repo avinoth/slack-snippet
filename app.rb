@@ -62,6 +62,9 @@ get '/gateway' do
       end
     when '-s'
       query = title
+      if @user.snippets.find_by(title: query)
+        message += "You have a title with exact match of your search query. If you intend to get the snippet try `/snippet -g #{query}` command instead."
+      end
       results = @user.snippets.where("title ILIKE ? OR snippet ILIKE ?", "%#{query}%", "%#{query}%")
       if results
         message += "Your Search results:- \n " + results.map.with_index {|s, i| "#{i+1}. #{s.title} - #{truncate(s.snippet, 30)}"}.join("\n")
