@@ -12,6 +12,7 @@ require './models/snippet'
 # The entry point for slash commands
 get '/gateway' do
   message = ""
+  @trigger = params[:command]
   @user = User.find_by(slack_user_id: params[:user_id])
   if @user and @user.token != params[:token]
     message += "Unauthorized Request."
@@ -63,10 +64,10 @@ get '/gateway' do
     when '-s'
       query = title
       if @user.snippets.find_by(title: query)
-        message += "You have a title with exact match of your search query. If you intend to get the snippet try `/snippet -g #{query}` command instead."
+        message += "You have a title with exact match of your search query. If you intend to get the snippet try `#{@trigger} -g #{query}` command instead."
       end
       results = @user.snippets.where("title ILIKE ? OR snippet ILIKE ?", "%#{query}%", "%#{query}%")
-      if results
+      if results.present?
         message += "Your Search results:- \n " + results.map.with_index {|s, i| "#{i+1}. #{s.title} - #{truncate(s.snippet, 30)}"}.join("\n")
       else
         message += "Your Search query didn't yield any results. Try again with different keywords."
@@ -93,12 +94,12 @@ def extract_content text
 end
 
 def not_found_msg title
-  "Unable to find #{title}. Check if spelling is correct. You can search for snippets instead by `/snippet -s YOUR_QUERY`"
+  "Unable to find #{title}. Check if spelling is correct. You can search for snippets instead by `#{@trigger} -s YOUR_QUERY`"
 end
 
 def save_snippet
   if @snippet.save
-    return "Snippet saved successfully. You can access it by `/snippet -g #{@snippet.title}. \n"
+    return "Snippet saved successfully. You can access it by `#{@trigger} -g #{@snippet.title}. \n"
   else
     return "There was some error saving the snippet. Please try again."
   end
