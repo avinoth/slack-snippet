@@ -27,8 +27,10 @@ get '/gateway' do
     message += command[:message]
     return message
   end
-  title = command[:content][0].strip.downcase
-  snippet = command[:content][1]
+  if command[:content].present?
+    title = command[:content][0].strip.downcase
+    snippet = command[:content][1]
+  end
   case command[:action]
     when '-n'
       @snippet = @user.snippets.find_by(title: title)
@@ -72,12 +74,20 @@ get '/gateway' do
       else
         message += "Your Search query didn't yield any results. Try again with different keywords."
       end
+    when '-r'
+      if @user.snippets.present?
+        message += "Total Snippets saved: #{@user.snippets.count}n \n"
+        lss = @user.snippets.order('created_at desc').first
+        message += "Last Saved Snippet: #{lss.title} - #{lss.created_at.strftime('%F %H:%M')}"
+      else
+        message += "You don't have any snippets created. Create one now by `-n title -c content"
+      end
   end
   message
 end
 
 def extract_content text
-  keywords = {"-n" => 2, "-g" => 1, "-e" => 2, "-d" => 1, "-s" => 1}
+  keywords = {"-n" => 2, "-g" => 1, "-e" => 2, "-d" => 1, "-s" => 1, "-r" => 0}
   action = text[0..1]
 
   if !keywords.keys.include?(action)
