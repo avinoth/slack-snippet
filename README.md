@@ -20,7 +20,7 @@ A slack slash command bot to save snippets/content quickly from slack.
 
 ### Available Commands and Format:-
 
-There are 5 commands available in total as of now. Their formats are,
+There are 6 commands available in total as of now. Their formats are,
 
 ##### new:-
     To create a new snippet. The syntax is `-n title -c content`.
@@ -56,6 +56,12 @@ There are 5 commands available in total as of now. Their formats are,
                 1. heroku_pg_backup
                 2. heroku db_migrate
             ```
+  
+##### report:-
+    Will give a short summary of the snippets saved.
+    syntax :- `-r`
+    resp -  Total Snippets Saved - 6
+            Last Saved Snippet - stackoverflow_memoryleak - 2015-09-10 21:56
 
 
 ### To Run it locally :-
