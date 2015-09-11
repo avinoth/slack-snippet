@@ -1,0 +1,9 @@
+{
+  "name": "slack-snippet",
+  "description": "A slack based tool to quickly save and access snippets of text.",
+  "repository": "https://github.com/avinoth/slack-snippet",
+  "keywords": ["ruby", "sinatra", "slack", "productivity"],
+  "scripts": {
+    "postdeploy": "bundle exec rake db:migrate"
+  }
+}
