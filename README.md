@@ -6,7 +6,7 @@ A slack slash command bot to save snippets/content quickly from slack.
 
 1. Deploy the app to heroku and choose a url of your preference.
 2. Next go to Configure Instructions page of your slack account and select `Slash Commands`
-3. In the Add new slash command page, choose any command of  your choice though `/snippet` is preferred (since the tips are assumed with that command) and click `Add Slash Command Integration`
+3. In the Add new slash command page, choose any command of  your choice and click `Add Slash Command Integration`
 4. In the next page, in Integration Settings input the options as below,
 
   ```
