@@ -9,7 +9,7 @@ require './config/environments'
 require './models/user'
 require './models/snippet'
 
-# The entry point for slash commands
+
 get '/gateway' do
   message = ""
   @trigger = params[:command]
@@ -27,15 +27,18 @@ get '/gateway' do
     message += command[:message]
     return message
   end
+
+
   if command[:content].present?
     title = command[:content][0].strip.downcase
     snippet = command[:content][1]
   end
+
   case command[:action]
     when '-n'
       @snippet = @user.snippets.find_by(title: title)
       if @snippet
-        message += "Snippet already with the name #{title} exists. If you want to edit it try -e flag."
+        message += duplicate_entry title
       else
         @snippet = @user.snippets.new({title: title, snippet: snippet.strip})
         message += save_snippet
@@ -52,8 +55,17 @@ get '/gateway' do
       unless @snippet
         message += not_found_msg title
       else
-        @snippet.snippet = snippet.strip
-        message += save_snippet
+        if command[:tag]
+          if @user.snippets.find_by(title: snippet)
+            message += duplicate_entry snippet
+          else
+            @snippet.title = snippet.strip
+            message += save_snippet
+          end
+        else
+          @snippet.snippet = snippet.strip
+          message += save_snippet
+        end
       end
     when '-d'
       @snippet = @user.snippets.find_by(title: title)
@@ -94,12 +106,18 @@ def extract_content text
     return {success: false, message: "Invalid Command. Valid commands are `#{keywords.keys.join(", ")}`"}
   end
 
-  command = text.gsub(action, "").strip.split(" -c ")
+  if text.include? " -t "
+    command = text.gsub(action, "").strip.split(" -t ")
+    tag = true
+  else
+    command = text.gsub(action, "").strip.split(" -c ")
+    tag = false
+  end
 
   if keywords[action] != command.length
-    return {success: false, message: "Invalid Format. Valid format are \n `-n title -c content`, \n `-g title`, \n `-s query`, \n `-e title -c content`, \n `-d title`"}
+    return {success: false, message: "Invalid Format. Valid format are \n `-n title -c content`, \n `-g title`, \n `-s query`, \n `-e title -c newContent` OR `-e title -t newTitle `, \n `-d title`"}
   else
-    return {success: true, action: action, content: command}
+    return {success: true, action: action, content: command, tag: tag}
   end
 end
 
@@ -109,7 +127,7 @@ end
 
 def save_snippet
   if @snippet.save
-    return "Snippet saved successfully. You can access it by `#{@trigger} -g #{@snippet.title}. \n"
+    return "Snippet saved successfully. You can access it by `#{@trigger} -g #{@snippet.title}`. \n"
   else
     return "There was some error saving the snippet. Please try again."
   end
@@ -117,4 +135,8 @@ end
 
 def truncate(content, max=10)
   content.length > max ? "#{content[0...max]}..." : content
+end
+
+def duplicate_entry title
+  "Snippet already with the name #{title} exists. If you are trying to edit use -e flag."
 end
