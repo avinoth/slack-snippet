@@ -89,8 +89,9 @@ get '/gateway' do
     when '-r'
       if @user.snippets.present?
         message += "Total Snippets saved: #{@user.snippets.count}n \n"
-        lss = @user.snippets.order('created_at desc').first
-        message += "Last Saved Snippet: #{lss.title} - #{lss.created_at.strftime('%F %H:%M')}"
+        snippets = @user.snippets.order('updated_at desc')
+        message += "Last 3 snippets updated, \n"
+        message += snippets.limit(3).map.with_index {|s, i| "#{i+1}. #{s.title} - #{s.updated_at.strftime('%F %H:%M')}"}.join("\n")
       else
         message += "You don't have any snippets created. Create one now by `-n title -c content"
       end
