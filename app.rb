@@ -123,7 +123,7 @@ def extract_content text
 end
 
 def not_found_msg title
-  "Unable to find #{title}. Check if spelling is correct. You can search for snippets instead by `#{@trigger} -s YOUR_QUERY`"
+  "Unable to find #{title}. Check if spelling is correct. You can search for snippets instead by `#{@trigger} -s #{title}`"
 end
 
 def save_snippet
