@@ -127,7 +127,7 @@ def not_found_msg title
 end
 
 def save_snippet
-  if @snippet.save
+  if @snippet.save!
     return "Snippet saved successfully. You can access it by `#{@trigger} -g #{@snippet.title}`. \n"
   else
     return "There was some error saving the snippet. Please try again."
@@ -139,5 +139,5 @@ def truncate(content, max=10)
 end
 
 def duplicate_entry title
-  "Snippet already with the name #{title} exists. If you are trying to edit use -e flag."
+  "Snippet already with the name #{title} exists. If you are trying to edit use `#{@trigger} -e #{title}`"
 end
